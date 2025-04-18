@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('smartfiber.png') }}" type="image/x-icon">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
@@ -31,89 +31,30 @@
 <!-- [Body] Start -->
 
 <body>
-    <!-- [ Pre-loader ] start -->
-    <div class="loader-bg">
-        <div class="loader-track">
-            <div class="loader-fill"></div>
-        </div>
-    </div>
-    <!-- [ Pre-loader ] End -->
 
-    <div class="auth-main">
-        <div class="auth-wrapper v3">
-            <div class="auth-form">
-                <div class="auth-header">
-
-                </div>
-                <div class="card my-5">
+    <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+        <div class="row w-100 justify-content-center">
+            <div class="col-md-4 col-sm-12">
+                <div class="card shadow">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-end mb-4">
-                            <h3 class="mb-0"><b>Login</b></h3>
-                            <a href="#" class="link-primary">Don't have an account?</a>
+                        <div>
+                            <center>
+                                <img src="{{ asset('smartfiber.png') }}" width="200" alt="">
+                            </center>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" placeholder="Email Address">
+                            <label class="form-label">Username</label>
+                            <input type="email" name="username" class="form-control" placeholder="Enter username">
                         </div>
                         <div class="form-group mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" placeholder="Password">
-                        </div>
-                        <div class="d-flex mt-1 justify-content-between">
-                            <div class="form-check">
-                                <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"
-                                    checked="">
-                                <label class="form-check-label text-muted" for="customCheckc1">Keep me sign in</label>
-                            </div>
-                            <h5 class="text-secondary f-w-400">Forgot Password?</h5>
+                            <input type="password" name="password" class="form-control" placeholder="Enter password">
                         </div>
                         <div class="d-grid mt-4">
-                            <button type="button" class="btn btn-primary">Login</button>
-                        </div>
-                        <div class="saprator mt-3">
-                            <span>Login with</span>
-                        </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="d-grid">
-                                    <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                                        <img src="../assets/images/authentication/google.svg" alt="img"> <span
-                                            class="d-none d-sm-inline-block"> Google</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="d-grid">
-                                    <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                                        <img src="../assets/images/authentication/twitter.svg" alt="img"> <span
-                                            class="d-none d-sm-inline-block"> Twitter</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="d-grid">
-                                    <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                                        <img src="../assets/images/authentication/facebook.svg" alt="img"> <span
-                                            class="d-none d-sm-inline-block"> Facebook</span>
-                                    </button>
-                                </div>
-                            </div>
+                            <button type="button" class="btn text-white"
+                                style="background-color: #14BC23;">Login</button>
                         </div>
                     </div>
-                </div>
-                <div class="auth-footer row">
-                    <!-- <div class=""> -->
-                    <div class="col my-1">
-                        <p class="m-0">Copyright © <a href="#">Codedthemes</a></p>
-                    </div>
-                    <div class="col-auto my-1">
-                        <ul class="list-inline footer-link mb-0">
-                            <li class="list-inline-item"><a href="#">Home</a></li>
-                            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-                            <li class="list-inline-item"><a href="#">Contact us</a></li>
-                        </ul>
-                    </div>
-                    <!-- </div> -->
                 </div>
             </div>
         </div>

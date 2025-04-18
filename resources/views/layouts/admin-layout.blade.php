@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('smartfiber.png') }}" type="image/x-icon">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
@@ -36,22 +36,24 @@
     </div>
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
+            <br>
             <div class="m-header">
-                <a href="../dashboard/index.html" class="b-brand text-primary">
-                    <img src="../assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">
+                <a href="{{ route('admin.dashboard.index') }}" class="b-brand p-5">
+                    <img src="{{ asset('smartfiber.png') }}" width="100" class="img-fluid logo-lg" alt="logo">
                 </a>
             </div>
+            <br>
             <div class="navbar-content">
                 <ul class="pc-navbar">
                     <li class="pc-item">
-                        <a href="../dashboard/index.html" class="pc-link">
+                        <a href="{{ route('admin.dashboard.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
                             <span class="pc-mtext">Dashboard</span>
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="../dashboard/index.html" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
+                        <a href="{{ route('admin.users.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-users"></i></span>
                             <span class="pc-mtext">User Monitoring</span>
                         </a>
                     </li>
