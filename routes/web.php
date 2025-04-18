@@ -11,5 +11,4 @@ Route::get('/', function () {
 Route::prefix('admin')->group(function (){
     Route::get('dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard.index');
     Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
-
 });

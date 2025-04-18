@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 
 class RegistrationController extends Controller
 {
-    public function store(){
+    public function store(Request $request){
         // Validate the request
         $validatedData = request()->validate([
             'name' => 'required|string|max:255',

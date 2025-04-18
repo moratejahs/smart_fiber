@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    public function login()
+    public function login(Request $request)
     {
         // Validate the request
         $validated = request()->validate([
