@@ -2,16 +2,17 @@
 
 use App\Http\Controllers\Admin\AdminDashboard;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\V1\API\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.login');
-});
-Route::post('/login', [LoginController::class, 'login'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('logout');
+    return view('auth.login'); // Replace with your login view
+})->name('login');
 
-Route::prefix('admin')->group(function (){
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     Route::get('dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard.index');
     Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
 });

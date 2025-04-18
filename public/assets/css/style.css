@@ -30,7 +30,7 @@ File: style.css
 [data-pc-theme_contrast=true] {
   --bs-body-bg: #ffffff;
   --pc-sidebar-background: transparent;
-  --pc-sidebar-active-color: #0d6efd;
+  --pc-sidebar-active-color: #14BC23;
   --pc-sidebar-shadow: 1px 0 3px 0px #dee2e6;
   --pc-sidebar-border: none;
   --pc-card-box-shadow: 0px 8px 24px rgba(27, 46, 94, 0.08);
@@ -16069,11 +16069,11 @@ pre[class*=language-] > code {
 }
 .pc-sidebar .pc-navbar > .pc-item.active > .pc-link {
   font-weight: 500;
-  color: var(--pc-sidebar-active-color);
+  color: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item.active > .pc-link:before {
   opacity: 0;
-  background: var(--pc-sidebar-active-color);
+  background: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item.active:not(.pc-hasmenu) > .pc-link::after {
   content: "";
@@ -16082,11 +16082,11 @@ pre[class*=language-] > code {
   right: 0px;
   width: 2px;
   height: 100%;
-  background: var(--pc-sidebar-active-color);
+  background: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item.active:not(.pc-hasmenu) > .pc-link:before {
   opacity: 0.1;
-  background: var(--pc-sidebar-active-color);
+  background: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item:hover:not(.active) > .pc-link:before {
   background: var(--pc-sidebar-color);
@@ -16120,14 +16120,14 @@ pre[class*=language-] > code {
   background: var(--pc-sidebar-color);
 }
 .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.pc-trigger > .pc-link, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.active > .pc-link, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item:focus > .pc-link {
-  color: var(--pc-sidebar-active-color);
+  color: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.pc-trigger > .pc-link:before, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.active > .pc-link:before, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item:focus > .pc-link:before {
   opacity: 0.1;
-  background: var(--pc-sidebar-active-color);
+  background: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.pc-trigger > .pc-link:after, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item.active > .pc-link:after, .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-item:focus > .pc-link:after {
-  background: var(--pc-sidebar-active-color);
+  background: #14BC23;
 }
 .pc-sidebar .pc-navbar > .pc-item .pc-submenu .pc-link {
   padding: 10px 30px 10px 58px;

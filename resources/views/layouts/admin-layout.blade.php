@@ -23,7 +23,7 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
     <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css') }}">
-
+    @yield('links')
 </head>
 
 
@@ -38,7 +38,9 @@
             <br>
             <div class="m-header">
                 <a href="{{ route('admin.dashboard.index') }}" class="b-brand p-5">
-                    <img src="{{ asset('smartfiber.png') }}" width="100" class="img-fluid logo-lg" alt="logo">
+                    {{-- <img src="{{ asset('smartfiber.png') }}" width="100" height="100" class="img-fluid logo-sm"
+                        width="100" class="img-fluid logo-lg" alt="logo"> --}}
+                    <h4><span style="color: #14BC23;">Smart</span><span style="color: #FFC000;"> Fiber</span></h4>
                 </a>
             </div>
             <br>
@@ -120,11 +122,12 @@
                                             class="user-avtar wid-35">
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-1">Stebin Ben</h6>
+                                        <h6 class="mb-1">
+                                            {{ Auth::user()->name }}
+                                        </h6>
                                         <span>Administrator Portal</span>
                                     </div>
-                                    <a href="#!" class="pc-head-link bg-transparent"><i
-                                            class="ti ti-power text-danger"></i></a>
+
                                 </div>
                             </div>
                             {{-- <ul class="nav drp-tabs nav-fill nav-tabs" id="mydrpTab" role="tablist">
@@ -145,12 +148,18 @@
                                 <div class="tab-pane fade show active" id="drp-tab-1" role="tabpanel"
                                     aria-labelledby="drp-t1" tabindex="0">
 
-                                    <a href="#!" class="dropdown-item">
-                                        <i class="ti ti-power"></i>
-                                        <span>Logout</span>
-                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="dropdown-item border-0 bg-transparent w-100 text-danger text-start">
+                                            <i class="ti ti-power"></i>
+                                            <span>Logout</span>
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
+
                         </div>
                     </li>
                 </ul>
@@ -163,7 +172,7 @@
 
     <!-- [ Main Content ] start -->
     <div class="pc-container">
-
+        @yield('content')
     </div>
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
@@ -176,7 +185,7 @@
 
     <!-- [Page Specific JS] start -->
     <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
     <!-- Required Js -->
     <script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
@@ -216,7 +225,7 @@
     </script>
 
 
-
+    @yield('scripts')
 </body>
 <!-- [Body] end -->
 

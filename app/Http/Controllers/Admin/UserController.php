@@ -16,7 +16,7 @@ class UserController extends Controller
         $users = User::query()
             ->orderBy('created_at', 'desc')
             ->get();
-
+        return view('admin.user.index', compact('users'));
     }
 
     /**

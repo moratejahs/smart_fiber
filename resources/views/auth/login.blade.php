@@ -42,27 +42,42 @@
             <div class="col-md-4 col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-                            <center>
-                                <img src="{{ asset('smartfiber.png') }}" width="200" alt="">
-                                <div>
-                                    <small class="text-muted">Powered by AI Detection</small>
-                                </div>
-                            </center>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="email" name="username" class="form-control" placeholder="Enter username">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Enter password">
-                        </div>
-                        <div class="d-grid mt-4">
-                            <button type="button" class="btn text-white"
-                                style="background-color: #14BC23;">Login</button>
-                        </div>
+                        <form action="{{ route('login.post') }}" method="POST">
+                            @csrf
+                            <div>
+
+                                <center>
+                                    <img src="{{ asset('smartfiber.png') }}" width="200" alt="">
+                                    <div>
+                                        <small class="text-muted">Powered by AI Detection</small>
+                                    </div>
+                                </center>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" class="form-control" placeholder="Enter username">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control"
+                                    placeholder="Enter password">
+                            </div>
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn text-white" style="background-color: #14BC23;">
+                                    Log in
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

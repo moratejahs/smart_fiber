@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Barangay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class AdminDashboard extends Controller
 {
@@ -12,8 +14,23 @@ class AdminDashboard extends Controller
      */
     public function index()
     {
-        //
+        $data = DB::table('barangays')
+            ->leftJoin('datasets', 'datasets.barangay_name', '=', 'barangays.name')
+            ->select('barangays.name as barangay_name', DB::raw('COUNT(datasets.id) as total_users'))
+            ->groupBy('barangays.name')
+            ->orderBy('barangay_name', 'asc')
+            ->get();
+
+        // Prepare the data for JavaScript
+        $barangayNames = $data->pluck('barangay_name')->toArray();
+        $totalUsers = $data->pluck('total_users')->toArray();
+
+        return view('admin.dashboard.index', [
+            'barangayNames' => $barangayNames,
+            'totalUsers' => $totalUsers,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
