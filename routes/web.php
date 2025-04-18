@@ -6,7 +6,7 @@ use App\Http\Controllers\V1\API\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('layouts.admin-layout');
+    return view('auth.login');
 });
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('logout');
