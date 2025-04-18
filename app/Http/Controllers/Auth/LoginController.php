@@ -11,4 +11,8 @@ class LoginController extends Controller
     {
         // Validate
     }
+    public function logout(Request $request)
+    {
+        // Validate
+    }
 }
