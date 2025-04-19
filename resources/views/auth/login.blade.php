@@ -31,6 +31,66 @@
             margin: 0;
             background-color: #14BC23;
             overflow: hidden;
+            position: relative;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 90%;
+            background: linear-gradient(45deg, #FFC000, #14BC23);
+            animation: float 8s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+
+        .circle-4 {
+            width: 180px;
+            height: 180px;
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.1);
+            }
+        }
+
+        .card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -93,3 +153,7 @@
 <!-- [Body] end -->
 
 </html>
+<div class="circle circle-1"></div>
+<div class="circle circle-2"></div>
+<div class="circle circle-3"></div>
+<div class="circle circle-4"></div>
