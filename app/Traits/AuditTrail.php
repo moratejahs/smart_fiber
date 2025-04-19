@@ -30,11 +30,30 @@ trait AuditTrail
             'user_id' => $user->id,
             'action' => $action,
             'module' => class_basename($model),
-            'description' => "User {$user->name} {$action} a {class_basename($model)}",
+            'description' => self::generateUserFriendlyDescription($user, $action, $model),
             'old_values' => $action !== 'created' ? $model->getOriginal() : null,
             'new_values' => $model->getAttributes(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent()
         ]);
+    }
+
+    protected static function generateUserFriendlyDescription($user, $action, $model)
+    {
+        $modelName = class_basename($model);
+        $userName = $user->name;
+        if ($modelName === 'User') {
+            $targetName = $model->name ?? '';
+            $barangay = $model->barangay ?? '';
+            if ($action === 'created') {
+                return "$userName added a new user named $targetName in $barangay.";
+            } elseif ($action === 'updated') {
+                return "$userName updated the user $targetName in $barangay.";
+            } elseif ($action === 'deleted') {
+                return "$userName deleted the user $targetName from $barangay.";
+            }
+        }
+        // Add more model-specific descriptions as needed
+        return "$userName $action a $modelName.";
     }
 }

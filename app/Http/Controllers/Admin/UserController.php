@@ -76,18 +76,20 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        $user = User::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'barangay' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'username' => 'required|string|max:255|unique:users,username,' . $id,
+            'username' => 'required|string|max:255|unique:users,username,'.$request->user_id,
             'password' => 'nullable|string|min:6',
             'is_admin' => 'required|boolean'
         ]);
+        // dd($validated);
+        $user = User::findOrFail($validated['user_id']);
 
         $userData = [
             'name' => $request->name,
@@ -103,15 +105,15 @@ class UserController extends Controller
 
         $user->update($userData);
 
-        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+        return to_route('admin.users.index')->with(['message' => 'User updated successfully', 'user' => $user]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $userId)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($userId);
         $user->delete();
 
         return response()->json(['message' => 'User deleted successfully']);
