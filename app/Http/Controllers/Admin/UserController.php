@@ -16,7 +16,8 @@ class UserController extends Controller
         $users = User::query()
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('admin.user.index', compact('users'));
+        $barangays = \App\Models\Barangay::all();
+        return view('admin.user.index', compact('users', 'barangays'));
     }
 
     /**
@@ -24,7 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        // return to_route('admin.user.create');
     }
 
     /**
@@ -32,7 +33,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'username' => 'required|string|unique:users|max:255',
+            'password' => 'required|string|min:6',
+            'is_admin' => 'required|boolean'
+        ]);
+
+        // dd($request);
+        $user = User::create([
+            'name' => $request->name,
+            'barangay' => $request->barangay,
+            'phone_number' => $request->phone_number,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'is_admin' => $request->is_admin
+        ]);
+
+        return response()->json(['message' => 'User created successfully', 'user' => $user]);
     }
 
     /**
@@ -40,7 +60,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
 
     /**
@@ -48,7 +69,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
 
     /**
@@ -56,7 +78,32 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'username' => 'required|string|max:255|unique:users,username,' . $id,
+            'password' => 'nullable|string|min:6',
+            'is_admin' => 'required|boolean'
+        ]);
+
+        $userData = [
+            'name' => $request->name,
+            'barangay' => $request->barangay,
+            'phone_number' => $request->phone_number,
+            'username' => $request->username,
+            'is_admin' => $request->is_admin
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = bcrypt($request->password);
+        }
+
+        $user->update($userData);
+
+        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
     }
 
     /**
@@ -64,6 +111,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }
