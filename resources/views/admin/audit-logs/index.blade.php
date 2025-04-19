@@ -7,49 +7,57 @@
 
 @section('content')
     <div class="pc-content">
-        <!-- [ breadcrumb ] start -->
         <div class="page-header">
             <div class="page-block">
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10">User Monitoring</h5>
+                            <h5 class="m-b-10">Audit Trail</h5>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- [ table section ] start -->
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <table id="userTable" class="table" style="width:100%">
+                        <table id="auditTable" class="table" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Barangay</th>
-                                    <th>Phone</th>
-                                    <th>Username</th>
-                                    <th>Role</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                    <th>IP Address</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $user)
+                                @foreach ($auditLogs as $log)
                                     <tr>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->barangay }}</td>
-                                        <td>{{ $user->phone_number }}</td>
-                                        <td>{{ $user->username }}</td>
+                                        <td>{{ $log->user->name }}</td>
                                         <td>
-                                            @if ($user->is_admin)
-                                                <span class="badge bg-success">Admin</span>
+                                            @if ($log->action == 'created')
+                                                <span class="badge bg-success">Created</span>
+                                            @elseif($log->action == 'updated')
+                                                <span class="badge bg-warning">Updated</span>
                                             @else
-                                                <span class="badge bg-primary">User</span>
+                                                <span class="badge bg-danger">Deleted</span>
                                             @endif
                                         </td>
-
+                                        <td>{{ $log->module }}</td>
+                                        <td>{{ $log->description }}</td>
+                                        <td>{{ $log->ip_address }}</td>
+                                        <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.audit-logs.show', $log) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="ti ti-eye"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -58,24 +66,25 @@
                 </div>
             </div>
         </div>
-        <!-- [ table section ] end -->
     </div>
 @endsection
 
 @section('scripts')
-    <!-- jQuery & DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            $('#userTable').DataTable({
+            $('#auditTable').DataTable({
                 responsive: true,
                 language: {
                     search: "",
                     searchPlaceholder: "Search records..."
                 },
                 dom: '<"d-flex justify-content-between align-items-center mb-4"lf>rtip',
+                order: [
+                    [5, 'desc']
+                ],
                 initComplete: function() {
                     $('.dataTables_filter input').addClass('form-control');
                     $('.dataTables_length select').addClass('form-select');
