@@ -23,7 +23,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <table id="auditTable" class="table" style="width:100%">
+                        <table id="userTable" class="table table-responsive" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>User</th>
@@ -75,7 +75,7 @@
 
     <script>
         $(document).ready(function() {
-            $('#auditTable').DataTable({
+            $('#userTable').DataTable({
                 responsive: true,
                 language: {
                     search: "",
