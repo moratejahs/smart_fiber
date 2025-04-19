@@ -25,7 +25,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <table id="userTable" class="table" style="width:100%">
+                        <table id="userTable" class="table table-responsive" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Name</th>
