@@ -6,6 +6,7 @@ use App\Models\Dataset;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class Yolo9Controller extends Controller
 {
@@ -49,7 +50,10 @@ class Yolo9Controller extends Controller
             'user_id' => $validated['user_id'], // assumes user is authenticated
         ]);
         // dd($randomItem);
-        return response()->json($randomItem);
+        return response()->json([
+            'randomItem' => $randomItem,
+            'date' => Carbon::now()->format('m-d-Y'),
+        ]);
     }
 
 }
