@@ -37,7 +37,7 @@ class Yolo9Controller extends Controller
         ];
         // Get a random one
         $randomItem = Arr::random($data);
-
+        // dd($randomItem);
         return response()->json($randomItem);
     }
 

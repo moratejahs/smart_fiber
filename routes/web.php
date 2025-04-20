@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\API\Yolo9Controller;
 use App\Http\Controllers\Admin\AuditLogController;
 
 Route::get('/', function () {
+
     return view('auth.login'); // Replace with your login view
 })->name('login');
 
