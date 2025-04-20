@@ -15,8 +15,9 @@ class AdminDashboard extends Controller
     public function index()
     {
         $data = DB::table('barangays')
-            ->leftJoin('datasets', 'datasets.barangay_name', '=', 'barangays.name')
-            ->select('barangays.name as barangay_name', DB::raw('COUNT(datasets.id) as total_users'))
+            ->leftJoin('users', 'users.barangay', '=', 'barangays.name')
+            ->leftJoin('datasets', 'datasets.user_id', '=', 'users.id')
+            ->select('barangays.name as barangay_name', DB::raw('COUNT(users.id) as total_users'))
             ->groupBy('barangays.name')
             ->orderBy('barangay_name', 'asc')
             ->get();
