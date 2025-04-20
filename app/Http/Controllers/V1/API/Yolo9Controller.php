@@ -14,12 +14,27 @@ class Yolo9Controller extends Controller
     public function index()
     {
         $data = [
-            ["name" => "S2 (Machine Strip)", "price" => "86 Pesos"],
-            ["name" => "JK (Hand Strip)", "price" => "48 Pesos"],
-            ["name" => "M1 (Bakbak ng JK)", "price" => "45 Pesos"],
-            ["name" => "S3 (Bakbak ng S2)", "price" => "45 Pesos"],
+            [
+                "grade" => "S2 (Machine Strip)",
+                "local_name" => "Bakak",
+                "price" => "86 Pesos"
+            ],
+            [
+                "grade" => "JK (Hand Strip)",
+                "local_name" => "Bakak",
+                "price" => "48 Pesos"
+            ],
+            [
+                "grade" => "M1 (Bakbak ng JK)",
+                "local_name" => "Bakak",
+                "price" => "45 Pesos"
+            ],
+            [
+                "grade" => "S3 (Bakbak ng S2)",
+                "local_name" => "Bakak",
+                "price" => "45 Pesos"
+            ],
         ];
-
         // Get a random one
         $randomItem = Arr::random($data);
 
