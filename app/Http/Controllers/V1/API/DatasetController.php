@@ -13,7 +13,7 @@ class DatasetController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'image' => 'required|image', // max 2MB
+            // 'image' => 'required|image', // max 2MB
             'grade' => 'required|string|max:255',
             'local_name' => 'required|string|max:255',
             'price' => 'required|string|max:255',
@@ -24,7 +24,7 @@ class DatasetController extends Controller
 
         // Create dataset
         $dataset = Dataset::create([
-            'image_path' => $imagePath,
+            // 'image_path' => $imagePath,
             'grade' => $validated['grade'],
             'local_name' => $validated['local_name'],
             'price' => $validated['price'],

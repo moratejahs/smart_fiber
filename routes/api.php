@@ -1,5 +1,5 @@
 <?php
-
+use \App\Http\Controllers\V1\API\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\API\Yolo9Controller;
@@ -15,8 +15,6 @@ Route::get('/user', function (Request $request) {
 Route::get('/barangays', [BarangayController::class, 'index']);
 Route::post('/registrations', [RegistrationController::class, 'store']);
 Route::get('/yolo9', [Yolo9Controller::class, 'index']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/recent-datasets', [RecentUserController::class, 'index']);
-    Route::post('/dataset', [DatasetController::class, 'store']);
-});
+Route::get('/can-login', [LoginController::class, 'canLogin']);
+Route::get('/recent-datasets', [RecentUserController::class, 'index']);
+Route::post('/dataset', [DatasetController::class, 'store']);
