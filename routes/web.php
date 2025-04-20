@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboard;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\V1\API\Yolo9Controller;
 use App\Http\Controllers\Admin\AuditLogController;
 
 Route::get('/', function () {
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::delete('/users/{userId}/delete', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
+    Route::get('/yolo9', [Yolo9Controller::class, 'index']);
 
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
