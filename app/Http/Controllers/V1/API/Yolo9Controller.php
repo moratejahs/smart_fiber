@@ -43,7 +43,7 @@ class Yolo9Controller extends Controller
         $validated = $request->validate([
             'user_id' =>'required',
         ]);
-        Dataset::create([
+        $dataset = Dataset::create([
             'grade' => $randomItem['grade'],
             'local_name' => $randomItem['local_name'],
             'price' => $randomItem['price'],
@@ -52,7 +52,7 @@ class Yolo9Controller extends Controller
         // dd($randomItem);
         return response()->json([
             'randomItem' => $randomItem,
-            'date' => Carbon::now()->format('m-d-Y'),
+            'date' => $dataset->created_at,
         ]);
     }
 
