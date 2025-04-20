@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers\V1\API;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Dataset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class RecentUserController extends Controller
 {
-    public function index()
+    public function index(string $userId)
     {
-        $recentUsers = User::with('datasets')
+        $recentDatasets = Dataset::query()
+            ->select('grade', 'local_name', 'price', 'created_at') // keep original datetime
+            ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
-            ->get();
-        return response()->json($recentUsers);
+            ->get()
+            ->map(function ($item) {
+                $item->formatted_date = Carbon::parse($item->created_at)->format('m-d-Y');
+                return $item;
+            });
+
+        return response()->json($recentDatasets);
     }
 }

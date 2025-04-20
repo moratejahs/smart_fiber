@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\API;
 
+use App\Models\Dataset;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -11,7 +12,7 @@ class Yolo9Controller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = [
             [
@@ -37,6 +38,16 @@ class Yolo9Controller extends Controller
         ];
         // Get a random one
         $randomItem = Arr::random($data);
+
+        $validated = $request->validate([
+            'user_id' =>'required',
+        ]);
+        Dataset::create([
+            'grade' => $randomItem['grade'],
+            'local_name' => $randomItem['local_name'],
+            'price' => $randomItem['price'],
+            'user_id' => $validated['user_id'], // assumes user is authenticated
+        ]);
         // dd($randomItem);
         return response()->json($randomItem);
     }

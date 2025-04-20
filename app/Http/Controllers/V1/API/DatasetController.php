@@ -14,9 +14,10 @@ class DatasetController extends Controller
         // Validate input
         $validated = $request->validate([
             // 'image' => 'required|image', // max 2MB
-            'grade' => 'required|string|max:255',
-            'local_name' => 'required|string|max:255',
-            'price' => 'required|string|max:255',
+            'grade' => 'required',
+            'local_name' => 'required',
+            'price' => 'required',
+            'user_id' =>'required'
         ]);
 
         // Store image and get path
@@ -28,7 +29,7 @@ class DatasetController extends Controller
             'grade' => $validated['grade'],
             'local_name' => $validated['local_name'],
             'price' => $validated['price'],
-            'user_id' => auth()->id(), // assumes user is authenticated
+            'user_id' => $validated['user_id'], // assumes user is authenticated
         ]);
 
         return response()->json([

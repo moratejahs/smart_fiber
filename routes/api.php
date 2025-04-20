@@ -13,8 +13,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/barangays', [BarangayController::class, 'index']);
-Route::post('/registrations', [RegistrationController::class, 'store']);
-Route::get('/yolo9', [Yolo9Controller::class, 'index']);
-Route::get('/can-login', [LoginController::class, 'canLogin']);
-Route::get('/recent-datasets', [RecentUserController::class, 'index']);
+Route::post('/register', [RegistrationController::class, 'store']);
+Route::post('/yolo9', [Yolo9Controller::class, 'index']);
+Route::post('/login', [LoginController::class, 'canLogin']);
+Route::get('/recents/{userId}', [RecentUserController::class, 'index']);
 Route::post('/dataset', [DatasetController::class, 'store']);

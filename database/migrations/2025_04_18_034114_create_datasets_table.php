@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('grade');
             $table->string('local_name');
             $table->string('price');
-            $table->string('barangay_name');
+            // $table->string('barangay_name');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
