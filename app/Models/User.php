@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Barangay;
+use App\Traits\AuditTrail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Traits\AuditTrail;
 
 class User extends Authenticatable
 {
@@ -51,8 +52,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function datasets(): HasMany
+    public function datasets()
     {
-        return $this->hasMany(Dataset::class);
+        return $this->belongsTo(Dataset::class);
     }
+    public function barangay()
+    {
+        return $this->belongsTo(Barangay::class, 'barangay', 'name');
+        // or adjust if you use barangay_id
+    }
+
 }

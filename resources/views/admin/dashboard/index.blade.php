@@ -45,7 +45,7 @@
             (function() {
                 // Get data passed from the controller
                 var barangayNames = @json($barangayNames); // Array of barangay names
-                var totalUsers = @json($totalUsers); // Array of Total
+                var totalUsers = @json($totalDataset); // Array of Total
 
                 var options = {
                     chart: {

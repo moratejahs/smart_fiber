@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Barangay;
+use App\Models\Dataset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -17,18 +18,22 @@ class AdminDashboard extends Controller
         $data = DB::table('barangays')
             ->leftJoin('users', 'users.barangay', '=', 'barangays.name')
             ->leftJoin('datasets', 'datasets.user_id', '=', 'users.id')
-            ->select('barangays.name as barangay_name', DB::raw('COUNT(users.id) as total_users'))
+            ->select('barangays.name as barangay_name', DB::raw('COUNT(datasets.id) as total_datasets'))
             ->groupBy('barangays.name')
-            ->orderBy('barangay_name', 'asc')
+            ->orderBy('barangays.name')
             ->get();
-
         // Prepare the data for JavaScript
-        $barangayNames = $data->pluck('barangay_name')->toArray();
-        $totalUsers = $data->pluck('total_users')->toArray();
+        $barangayNames = [];
+        $totalDataset = [];
+        foreach ($data as $item) {
+            $barangayNames[] = $item->barangay_name;
+            $totalDataset[] = $item->total_datasets;
+        }
+
 
         return view('admin.dashboard.index', [
             'barangayNames' => $barangayNames,
-            'totalUsers' => $totalUsers,
+            'totalDataset' => $totalDataset,
         ]);
     }
 
