@@ -99,7 +99,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 1rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -189,6 +189,47 @@
                                     <span class="login-text">Log in</span>
                                     <i data-feather="loader" class="spinner d-none"></i>
                                 </button>
+
+                                <div class="text-center pt-2">
+                                    <a href="https://drive.google.com/file/d/1BoQqK-fVf1YGD4Tu2WMyzry-ngITTrUS/view"
+                                        target="_blank"
+                                        class="btn btn-outline-success btn-download-app position-relative"
+                                        style="border-radius: 15px; border: 2px solid #14BC23;">
+                                        <div class="default-text d-flex align-items-center justify-content-center">
+                                            <i class="ti ti-device-mobile me-2" style="font-size: 1.2rem;"></i>
+                                            <span>Download Mobile App</span>
+                                        </div>
+                                        <div class="hover-text d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100"
+                                            style="opacity: 0; transition: opacity 0.3s ease;">
+                                            <i class="ti ti-download me-2"></i>
+                                            <span>Available Now</span>
+                                        </div>
+                                    </a>
+                                    <style>
+                                        .btn-download-app:hover .default-text {
+                                            opacity: 0;
+                                        }
+
+                                        .btn-download-app:hover .hover-text {
+                                            opacity: 1 !important;
+                                        }
+                                    </style>
+                                </div>
+
+                                <style>
+                                    .btn-download-app:hover .download-overlay {
+                                        opacity: 1 !important;
+                                    }
+
+                                    .btn-download-app {
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                    }
+
+                                    .btn-download-app:hover {
+                                        transform: translateY(-2px);
+                                        box-shadow: 0 4px 12px rgba(20, 188, 35, 0.15);
+                                    }
+                                </style>
                             </div>
                         </form>
                     </div>
