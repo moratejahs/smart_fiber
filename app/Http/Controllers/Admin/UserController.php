@@ -52,7 +52,7 @@ class UserController extends Controller
             'is_admin' => $request->is_admin
         ]);
 
-        return response()->json(['message' => 'User created successfully', 'user' => $user]);
+        return to_route('admin.users.index')->with(['message' => 'User created successfully', 'user' => $user]);
     }
 
     /**
