@@ -58,12 +58,12 @@
                             <span class="pc-mtext">User Monitoring</span>
                         </a>
                     </li>
-                    {{-- <li class="pc-item">
+                    <li class="pc-item">
                         <a href="{{ route('admin.audit-logs.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-history"></i></span>
                             <span class="pc-mtext">Audit Trail</span>
                         </a>
-                    </li> --}}
+                    </li>
                 </ul>
 
             </div>

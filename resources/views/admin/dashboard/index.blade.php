@@ -45,7 +45,7 @@
             (function() {
                 // Get data passed from the controller
                 var barangayNames = @json($barangayNames); // Array of barangay names
-                var totalUsers = @json($totalUsers); // Array of total users
+                var totalUsers = @json($totalUsers); // Array of Total
 
                 var options = {
                     chart: {
@@ -60,7 +60,7 @@
                     },
                     colors: ["#14BC23"],
                     series: [{
-                        name: "Total Users",
+                        name: "Total",
                         data: totalUsers,
                     }],
                     stroke: {
