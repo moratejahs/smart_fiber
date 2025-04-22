@@ -18,22 +18,22 @@ class Yolo9Controller extends Controller
         $data = [
             [
                 "grade" => "S2 (Machine Strip)",
-                "local_name" => "Bakak",
+                "local_name" => "Bakbak",
                 "price" => "86 Pesos"
             ],
             [
                 "grade" => "JK (Hand Strip)",
-                "local_name" => "Bakak",
+                "local_name" => "Bakbak",
                 "price" => "48 Pesos"
             ],
             [
                 "grade" => "M1 (Bakbak ng JK)",
-                "local_name" => "Bakak",
+                "local_name" => "Bakbak",
                 "price" => "45 Pesos"
             ],
             [
                 "grade" => "S3 (Bakbak ng S2)",
-                "local_name" => "Bakak",
+                "local_name" => "Bakbak",
                 "price" => "45 Pesos"
             ],
         ];
