@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Storage;
 class Yolo9Controller extends Controller
 {
     /**
@@ -42,8 +42,13 @@ class Yolo9Controller extends Controller
 
         $validated = $request->validate([
             'user_id' =>'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB Max
         ]);
+        if (isset($validated['image'])) {
+            $filePath = Storage::disk('public')->put('image_path', $validated['image']);
+        }
         $dataset = Dataset::create([
+            'image_path' => $filePath ?? null,
             'grade' => $randomItem['grade'],
             'local_name' => $randomItem['local_name'],
             'price' => $randomItem['price'],
