@@ -14,7 +14,7 @@ class RecentUserController extends Controller
     public function index(string $userId)
     {
         $recentDatasets = Dataset::query()
-            ->select('grade', 'local_name', 'price', 'created_at') // keep original datetime
+            ->select('grade', 'local_name', 'price', 'created_at', 'image_path') // keep original datetime
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get()

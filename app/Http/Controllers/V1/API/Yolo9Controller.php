@@ -58,6 +58,7 @@ class Yolo9Controller extends Controller
         return response()->json([
             'randomItem' => $randomItem,
             'date' => $dataset->created_at,
+            $dataset
         ]);
     }
 
