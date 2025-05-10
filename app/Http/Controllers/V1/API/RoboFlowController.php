@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 class RoboFlowController extends Controller
 {
-      public function classify(Request $request)
+    public function classify(Request $request)
     {
         $request->validate([
             'image_url' => 'required|url'
