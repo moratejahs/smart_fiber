@@ -5,7 +5,7 @@ use App\Http\Controllers\V1\API\Yolo9Controller;
 use \App\Http\Controllers\V1\API\LoginController;
 use App\Http\Controllers\V1\API\DatasetController;
 use App\Http\Controllers\V1\API\BarangayController;
-use App\Http\Controllers\V1\APi\RoboFlowController;
+use App\Http\Controllers\V1\API\RoboFlowController;
 use App\Http\Controllers\V1\API\RecentUserController;
 use App\Http\Controllers\V1\API\RegistrationController;
 
