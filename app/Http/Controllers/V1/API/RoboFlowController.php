@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 class RoboFlowController extends Controller
 {
-     public function classify(Request $request)
+      public function classify(Request $request)
     {
         $request->validate([
             'image_url' => 'required|url'
@@ -16,14 +16,12 @@ class RoboFlowController extends Controller
         $apiKey = 'kbSD1BMksOvt0oqVengz';
         $imageUrl = $request->input('image_url');
 
-        $response = Http::post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1", [
-            // empty body, we use query parameters
-        ])->withOptions([
+        $response = Http::withOptions([
             'query' => [
                 'api_key' => $apiKey,
                 'image' => $imageUrl
             ]
-        ]);
+        ])->post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1");
 
         if ($response->successful()) {
             return response()->json($response->json());
