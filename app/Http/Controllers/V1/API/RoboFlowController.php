@@ -8,21 +8,30 @@ use Illuminate\Support\Facades\Http;
 class RoboFlowController extends Controller
 {
     public function classify(Request $request)
-    {
-        $request->validate([
-            'image_url' => 'required|url'
+{
+    // 1. Validate uploaded image
+    $request->validate([
+        'image' => 'required|file|image',
+    ]);
+
+    try {
+        $apiKey = 'kbSD1BMksOvt0oqVengz';
+
+        // 2. Store the image in the 'public/images' folder
+        $imageFile = $request->file('image');
+        $imageName = time() . '_' . $imageFile->getClientOriginalName();
+        $imagePath = $imageFile->storeAs('images', $imageName, 'public'); // stores in storage/app/public/images
+
+        // 3. Generate the public image URL
+        $imageUrl = asset('storage/' . $imagePath); // e.g., http://localhost:8000/storage/images/xxx.jpg
+
+        // 4. Send image URL to Roboflow
+        $response = Http::get("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1", [
+            'api_key' => $apiKey,
+            'image' => $imageUrl,
         ]);
 
-        $apiKey = 'kbSD1BMksOvt0oqVengz';
-        $imageUrl = $request->input('image_url');
-
-        $response = Http::withOptions([
-            'query' => [
-                'api_key' => $apiKey,
-                'image' => $imageUrl
-            ]
-        ])->post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1");
-
+        // 5. Return the response
         if ($response->successful()) {
             return response()->json($response->json());
         } else {
@@ -31,5 +40,12 @@ class RoboFlowController extends Controller
                 'details' => $response->body()
             ], $response->status());
         }
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => 'Something went wrong.',
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
+
 }
