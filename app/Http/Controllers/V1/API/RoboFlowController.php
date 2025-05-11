@@ -12,7 +12,7 @@ class RoboFlowController extends Controller
     {
         $request->validate([
             'image' => 'required|file|image',
-            'user_id' =>'required',
+            'user_id' => 'required',
         ]);
 
         try {
@@ -28,57 +28,50 @@ class RoboFlowController extends Controller
                 'image' => $imageUrl,
             ]);
 
-            if (!$response->successful()) {
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // Get the first prediction's class if available
+                $predictionClass = $data['predictions'][0]['class'] ?? null;
+                if ($predictionClass === null) {
+                    return response()->json([
+                        'error' => 'No predictions found'
+                    ], 422);
+                }
+                if($predictionClass === 'grade-s-s2') {
+                    $name = 'S2 (Machine Strip)';
+                    $localName = 'Spindle';
+                    $price = '86';
+                } elseif ($predictionClass === 'grade-s-i') {
+                    $name = 'M1 (Hand Strip)';
+                    $localName = 'Bakbak';
+                    $price = '45';
+                } elseif ($predictionClass === 'grade-jk') {
+                    $name = 'JK (Hand Strip)';
+                    $localName = 'Laguras';
+                    $price = '48';
+                } else {
+                    return response()->json([
+                        'error' => 'Invalid prediction class'
+                    ], 422);
+                }
+                Dataset::create([
+                    'image_path' => $imagePath,
+                    'grade' => $name,
+                    'local_name' => $localName,
+                    'price' => $price,
+                    'user_id' => $request->user_id,
+                ]);
+                return response()->json([
+                    'class' => $predictionClass,
+                    'confidence' => $data['predictions'][0]['confidence'] ?? null,
+                ]);
+            } else {
                 return response()->json([
                     'error' => 'Roboflow request failed',
                     'details' => $response->body()
                 ], $response->status());
             }
-
-            $data = $response->json();
-            $predictions = $data['predictions'] ?? [];
-
-            if (count($predictions) === 0) {
-                return response()->json(['error' => 'No predictions found'], 422);
-            }
-
-            // Count classes
-            $classCounts = collect($predictions)->countBy('class');
-
-            // Get class with most predictions
-            $topClass = $classCounts->sortDesc()->keys()->first();
-
-            // Get the first prediction with that class to get its confidence
-            $topPrediction = collect($predictions)->firstWhere('class', $topClass);
-            $confidence = $topPrediction['confidence'] ?? null;
-
-            // Map class name to grade details
-            $details = match ($topClass) {
-                'grade-s-s2' => ['S2 (Machine Strip)', 'Spindle', '86'],
-                'grade-s-i' => ['M1 (Hand Strip)', 'Bakbak', '45'],
-                'grade-jk'   => ['JK (Hand Strip)', 'Laguras', '48'],
-                default      => null,
-            };
-
-            if (!$details) {
-                return response()->json(['error' => 'Invalid prediction class'], 422);
-            }
-
-            [$name, $localName, $price] = $details;
-
-            Dataset::create([
-                'image_path' => $imagePath,
-                'grade' => $name,
-                'local_name' => $localName,
-                'price' => $price,
-                'user_id' => $request->user_id,
-            ]);
-
-            return response()->json([
-                'class' => $topClass,
-                'confidence' => $confidence,
-            ]);
-
         } catch (\Throwable $e) {
             return response()->json([
                 'error' => 'Something went wrong.',
