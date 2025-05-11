@@ -46,10 +46,9 @@ class RoboFlowController extends Controller
                 }
             }
         }
-        $classname = $results['class'] ?? null;
 
         return response()->json([
-            'class' => $results['class'] ?? null,
+            'class' => $results['class'] ?? 'No prediction found',
             // 'fullResponse' => $responseData
         ]);
     }
