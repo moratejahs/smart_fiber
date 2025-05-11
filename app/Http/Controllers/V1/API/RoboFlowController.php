@@ -18,7 +18,6 @@ class RoboFlowController extends Controller
 
         // Save the uploaded image to the public directory
         $imagePath = $request->file('image')->store('uploads', 'public');
-        $imageUrl = asset('storage/' . $imagePath);
         $imageUrl = asset("storage/{$imagePath}");
         $apiKey = 'kbSD1BMksOvt0oqVengz';
 
