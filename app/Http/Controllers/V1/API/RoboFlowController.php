@@ -27,32 +27,29 @@ class RoboFlowController extends Controller
         $responseData = $response->json();
         $predictions = $responseData['predictions'] ?? [];
         $results = [];
+        $desiredClass = 'grade-s-s2'; // Specify the desired class
+
         if (!empty($predictions)) {
-            $prediction = $predictions[0]; // Get the first prediction
-            $results = [
-            'class' => $prediction['class'] ?? 'Unknown',
-            'confidence' => $prediction['confidence'] ?? 0,
-            'boundingBox' => [
-                'x' => $prediction['x'] ?? 0,
-                'y' => $prediction['y'] ?? 0,
-                'width' => $prediction['width'] ?? 0,
-                'height' => $prediction['height'] ?? 0,
-            ],
-            ];
+            foreach ($predictions as $prediction) {
+                if ($prediction['class'] === $desiredClass) {
+                    $results = [
+                        'class' => $prediction['class'],
+                        'confidence' => $prediction['confidence'] ?? 0,
+                        'boundingBox' => [
+                            'x' => $prediction['x'] ?? 0,
+                            'y' => $prediction['y'] ?? 0,
+                            'width' => $prediction['width'] ?? 0,
+                            'height' => $prediction['height'] ?? 0,
+                        ],
+                    ];
+                    break; // Stop after finding the desired class
+                }
+            }
         }
 
         return response()->json([
             'results' => $results,
             'fullResponse' => $responseData
         ]);
-
-        if ($response->successful()) {
-            return response()->json($response->json());
-        } else {
-            return response()->json([
-                'error' => 'Roboflow request failed',
-                'details' => $response->body()
-            ], $response->status());
-        }
     }
 }
