@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\V1\APi;
 
-use App\Http\Controllers\Controller;
+use App\Models\Dataset;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,8 @@ class RoboFlowController extends Controller
     public function classify(Request $request)
     {
         $request->validate([
-            'image' => 'required|image'
+            'image' => 'required|image',
+            'user_id' => 'required',
         ]);
 
         // Save the uploaded image to the public directory
@@ -46,10 +48,47 @@ class RoboFlowController extends Controller
                 }
             }
         }
+        switch ($results['class'] ?? null) {
+            case 'grade-jk':
+                $results = [
+                    'name' => 'JK (Hand Strip)',
+                    'local_name' => 'Laguras',
+                    'price' => '48 Pesos'
+                ];
+                break;
 
+            case 'grade-s-s2':
+                $results = [
+                    'name' => 'S2 (Machine Strip)',
+                    'local_name' => 'Spindle',
+                    'price' => '86 Pesos'
+                ];
+                break;
+
+            case 'grade-s-i':
+                $results = [
+                    'name' => 'S3 (Machine Strip)',
+                    'local_name' => 'Bakbak',
+                    'price' => '55 Pesos'
+                ];
+                break;
+
+            default:
+                $results = [
+                    'error' => 'Invalid image or unrecognized class'
+                ];
+                break;
+        }
+
+        Dataset::create([
+            'image_path' => $imagePath,
+            'grade' => $results['name'] ?? null,
+            'local_name' => $results['local_name'] ?? null,
+            'price' => $results['price'] ?? null,
+            'user_id' => $request->user_id,
+        ]);
         return response()->json([
-            'class' => $results['class'] ?? 'No prediction found',
-            // 'fullResponse' => $responseData
+            'message' => 'Image classified successfully'
         ]);
     }
 }
