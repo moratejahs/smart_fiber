@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\V1\APi;
 
-use App\Http\Controllers\Controller;
+use App\Models\Dataset;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,7 +47,54 @@ class RoboFlowController extends Controller
                 }
             }
         }
+        $classname = $results['class'] ?? null;
+        if ($results['class'] ?? false) {
+        $classname = $results['class'];
 
+            switch ($classname) {
+                case 'grade-jk':
+                    $results = [
+                        'name' => 'JK (Hand Strip)',
+                        'local_name' => 'Laguras',
+                        'price' => '48 Pesos'
+                    ];
+                    break;
+
+                case 'grade-s-s2':
+                    $results = [
+                        'name' => 'S2 (Machine Strip)',
+                        'local_name' => 'Spindle',
+                        'price' => '86 Pesos'
+                    ];
+                    break;
+
+                case 'grade-s-i':
+                    $results = [
+                        'name' => 'S3 (Machine Strip)',
+                        'local_name' => 'Bakbak',
+                        'price' => '55 Pesos'
+                    ];
+                    break;
+
+                default:
+                    $results = [
+                        'error' => 'Invalid image or unrecognized class'
+                    ];
+                    break;
+            }
+            } else {
+                $results = [
+                    'error' => 'No predictions found'
+                ];
+        }
+
+        Dataset::create([
+            'image_path' => $imagePath,
+            'grade' => $results['name'] ?? null,
+            'local_name' => $results['local_name'] ?? null,
+            'price' => $results['price'] ?? null,
+            'user_id' => 5,
+        ]);
         return response()->json([
             'class' => $results['class'] ?? null,
             // 'fullResponse' => $responseData
