@@ -71,7 +71,7 @@ class RoboFlowController extends Controller
                 'grade' => $name,
                 'local_name' => $localName,
                 'price' => $price,
-                'user_id' => auth()->id(),
+                'user_id' => $request->user_id,
             ]);
 
             return response()->json([
