@@ -48,8 +48,8 @@ class RoboFlowController extends Controller
         }
 
         return response()->json([
-            'results' => $results,
-            'fullResponse' => $responseData
+            'class' => $results['class'] ?? null,
+            // 'fullResponse' => $responseData
         ]);
     }
 }
