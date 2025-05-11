@@ -24,7 +24,7 @@ class Yolo9Controller extends Controller
 
         // Save the image to the public directory
         $imagePath = $request->file('image')->store('uploads', 'public');
-        $imageUrl = asset('storage/' . $imagePath);
+        $imageUrl = asset("storage/{$imagePath}");
 
         $apiKey = 'kbSD1BMksOvt0oqVengz';
 
@@ -92,13 +92,19 @@ class Yolo9Controller extends Controller
         }
 
         // Only store in the Dataset model if a valid grade is found
-        Dataset::create([
-            'image_path' => $imagePath,
-            'grade' => $results['grade'],
-            'local_name' => $results['local_name'],
-            'price' => $results['price'],
-            'user_id' => $request->user_id,
-        ]);
+        try {
+            Dataset::create([
+                'image_path' => $imagePath,
+                'grade' => $results['grade'],
+                'local_name' => $results['local_name'],
+                'price' => $results['price'],
+                'user_id' => $request->user_id,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to save data: ' . $e->getMessage()
+            ], 500);
+        }
 
         return response()->json([
             'message' => 'Image classified successfully'
