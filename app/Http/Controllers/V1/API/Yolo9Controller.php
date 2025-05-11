@@ -85,13 +85,21 @@ class Yolo9Controller extends Controller
                 break;
         }
 
+        if (empty($results['grade'])) {
+            return response()->json([
+            'error' => 'No prediction found'
+            ], 400);
+        }
+
+        // Only store in the Dataset model if a valid grade is found
         Dataset::create([
             'image_path' => $imagePath,
-            'grade' => $results['grade'] ?? null,
-            'local_name' => $results['local_name'] ?? null,
-            'price' => $results['price'] ?? null,
+            'grade' => $results['grade'],
+            'local_name' => $results['local_name'],
+            'price' => $results['price'],
             'user_id' => $request->user_id,
         ]);
+
         return response()->json([
             'message' => 'Image classified successfully'
         ]);
