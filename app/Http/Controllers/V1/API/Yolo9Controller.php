@@ -15,50 +15,83 @@ class Yolo9Controller extends Controller
      */
     public function index(Request $request)
     {
-        $data = [
-            [
-                "grade" => "S2 (Machine Strip)",
-                "local_name" => "Spindle",
-                "price" => "86 Pesos"
-            ],
-            [
-                "grade" => "JK (Hand Strip)",
-                "local_name" => "Laguras",
-                "price" => "48 Pesos"
-            ],
-            [
-                "grade" => "M1 (Bakbak ng JK)",
-                "local_name" => "Bakbak",
-                "price" => "45 Pesos"
-            ],
-            [
-                "grade" => "S3 (Bakbak ng S2)",
-                "local_name" => "Bakbak",
-                "price" => "45 Pesos"
-            ],
-        ];
-        // Get a random one
-        $randomItem = Arr::random($data);
+        $request->validate([
+            'image' => 'required|image',
+            'user_id' => 'required',
+        ]);
 
-        $validated = $request->validate([
-            'user_id' =>'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB Max
-        ]);
-        if (isset($validated['image'])) {
-            $filePath = Storage::disk('public')->put('image_path', $validated['image']);
+        // Save the image to the public directory
+        $imagePath = $request->file('image')->store('uploads', 'public');
+        $imageUrl = asset('storage/' . $imagePath);
+
+        $apiKey = 'kbSD1BMksOvt0oqVengz';
+
+        // Call the RoboFlow API
+        $response = Http::post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1?api_key={$apiKey}&image={$imageUrl}");
+
+        $responseData = $response->json();
+        $predictions = $responseData['predictions'] ?? [];
+        $results = [];
+        $desiredClass = 'grade-s-s2'; // Specify the desired class
+
+        if (!empty($predictions)) {
+            foreach ($predictions as $prediction) {
+                if ($prediction['class'] === $desiredClass) {
+                    $results = [
+                        'class' => $prediction['class'],
+                        'confidence' => $prediction['confidence'] ?? 0,
+                        'boundingBox' => [
+                            'x' => $prediction['x'] ?? 0,
+                            'y' => $prediction['y'] ?? 0,
+                            'width' => $prediction['width'] ?? 0,
+                            'height' => $prediction['height'] ?? 0,
+                        ],
+                    ];
+                    break; // Stop after finding the desired class
+                }
+            }
         }
-        $dataset = Dataset::create([
-            'image_path' => $filePath ?? null,
-            'grade' => $randomItem['grade'],
-            'local_name' => $randomItem['local_name'],
-            'price' => $randomItem['price'],
-            'user_id' => $validated['user_id'], // assumes user is authenticated
+        switch ($results['class'] ?? null) {
+            case 'grade-jk':
+                $results = [
+                    'name' => 'JK (Hand Strip)',
+                    'local_name' => 'Laguras',
+                    'price' => '48 Pesos'
+                ];
+                break;
+
+            case 'grade-s-s2':
+                $results = [
+                    'name' => 'S2 (Machine Strip)',
+                    'local_name' => 'Spindle',
+                    'price' => '86 Pesos'
+                ];
+                break;
+
+            case 'grade-s-i':
+                $results = [
+                    'name' => 'S3 (Machine Strip)',
+                    'local_name' => 'Bakbak',
+                    'price' => '55 Pesos'
+                ];
+                break;
+
+            default:
+                $results = [
+                    'error' => 'Invalid image or unrecognized class'
+                ];
+                break;
+        }
+
+        Dataset::create([
+            'image_path' => $imagePath,
+            'grade' => $results['name'] ?? null,
+            'local_name' => $results['local_name'] ?? null,
+            'price' => $results['price'] ?? null,
+            'user_id' => $request->user_id,
         ]);
-        // dd($randomItem);
         return response()->json([
-            'randomItem' => $randomItem,
-            'date' => $dataset->created_at,
-            $dataset
+            'message' => 'Image classified successfully'
         ]);
     }
 
