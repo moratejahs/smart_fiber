@@ -56,7 +56,7 @@ class Yolo9Controller extends Controller
         switch ($results['class'] ?? null) {
             case 'grade-jk':
                 $results = [
-                    'name' => 'JK (Hand Strip)',
+                    'grade' => 'JK (Hand Strip)',
                     'local_name' => 'Laguras',
                     'price' => '48 Pesos'
                 ];
@@ -64,7 +64,7 @@ class Yolo9Controller extends Controller
 
             case 'grade-s-s2':
                 $results = [
-                    'name' => 'S2 (Machine Strip)',
+                    'grade' => 'S2 (Machine Strip)',
                     'local_name' => 'Spindle',
                     'price' => '86 Pesos'
                 ];
@@ -72,7 +72,7 @@ class Yolo9Controller extends Controller
 
             case 'grade-s-i':
                 $results = [
-                    'name' => 'S3 (Machine Strip)',
+                    'grade' => 'S3 (Machine Strip)',
                     'local_name' => 'Bakbak',
                     'price' => '55 Pesos'
                 ];
@@ -87,7 +87,7 @@ class Yolo9Controller extends Controller
 
         Dataset::create([
             'image_path' => $imagePath,
-            'grade' => $results['name'] ?? null,
+            'grade' => $results['grade'] ?? null,
             'local_name' => $results['local_name'] ?? null,
             'price' => $results['price'] ?? null,
             'user_id' => $request->user_id,
