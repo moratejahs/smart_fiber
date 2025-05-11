@@ -24,8 +24,8 @@ class Yolo9Controller extends Controller
 
         // Save the image to the public directory
         $imagePath = $request->file('image')->store('uploads', 'public');
-        $imageUrl = asset("storage/{$imagePath}");
-
+        // $imageUrl = asset("storage/{$imagePath}");
+    $imageUrl = Storage::disk('public')->url($imagePath);
         $apiKey = 'kbSD1BMksOvt0oqVengz';
 
         // Call the RoboFlow API
