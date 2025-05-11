@@ -6,7 +6,6 @@ use App\Models\Dataset;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class RoboFlowController extends Controller
 {
@@ -20,7 +19,7 @@ class RoboFlowController extends Controller
         // Save the uploaded image to the public directory
         $imagePath = $request->file('image')->store('uploads', 'public');
         $imageUrl = asset('storage/' . $imagePath);
-
+        $imageUrl = asset("storage/{$imagePath}");
         $apiKey = 'kbSD1BMksOvt0oqVengz';
 
         // Send the image URL to the RoboFlow API
