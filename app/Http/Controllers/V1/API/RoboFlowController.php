@@ -12,6 +12,7 @@ class RoboFlowController extends Controller
     {
         $request->validate([
             'image' => 'required|file|image',
+            'user_id' =>'required',
         ]);
 
         try {
