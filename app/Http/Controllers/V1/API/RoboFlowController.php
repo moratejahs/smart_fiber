@@ -1,34 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\V1\API;
+namespace App\Http\Controllers\V1\APi;
 
 use App\Models\Dataset;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
-class Yolo9Controller extends Controller
+class RoboFlowController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function classify(Request $request)
     {
         $request->validate([
             'image' => 'required|image',
             'user_id' => 'required',
         ]);
 
-        // Save the image to the public directory
+        // Save the uploaded image to the public directory
         $imagePath = $request->file('image')->store('uploads', 'public');
-        // $imageUrl = asset("storage/{$imagePath}");
-    $imageUrl = Storage::disk('public')->url($imagePath);
+        $imageUrl = asset('storage/' . $imagePath);
+
         $apiKey = 'kbSD1BMksOvt0oqVengz';
 
-        // Call the RoboFlow API
+        // Send the image URL to the RoboFlow API
         $response = Http::post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1?api_key={$apiKey}&image={$imageUrl}");
 
         $responseData = $response->json();
@@ -56,7 +51,7 @@ class Yolo9Controller extends Controller
         switch ($results['class'] ?? null) {
             case 'grade-jk':
                 $results = [
-                    'grade' => 'JK (Hand Strip)',
+                    'name' => 'JK (Hand Strip)',
                     'local_name' => 'Laguras',
                     'price' => '48 Pesos'
                 ];
@@ -64,7 +59,7 @@ class Yolo9Controller extends Controller
 
             case 'grade-s-s2':
                 $results = [
-                    'grade' => 'S2 (Machine Strip)',
+                    'name' => 'S2 (Machine Strip)',
                     'local_name' => 'Spindle',
                     'price' => '86 Pesos'
                 ];
@@ -72,7 +67,7 @@ class Yolo9Controller extends Controller
 
             case 'grade-s-i':
                 $results = [
-                    'grade' => 'S3 (Machine Strip)',
+                    'name' => 'S3 (Machine Strip)',
                     'local_name' => 'Bakbak',
                     'price' => '55 Pesos'
                 ];
@@ -85,30 +80,15 @@ class Yolo9Controller extends Controller
                 break;
         }
 
-        if (empty($results['grade'])) {
-            return response()->json([
-            'error' => 'No prediction found'
-            ], 400);
-        }
-
-        // Only store in the Dataset model if a valid grade is found
-        try {
-            Dataset::create([
-                'image_path' => $imagePath,
-                'grade' => $results['grade'],
-                'local_name' => $results['local_name'],
-                'price' => $results['price'],
-                'user_id' => $request->user_id,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to save data: ' . $e->getMessage()
-            ], 500);
-        }
-
+        Dataset::create([
+            'image_path' => $imagePath,
+            'grade' => $results['name'] ?? null,
+            'local_name' => $results['local_name'] ?? null,
+            'price' => $results['price'] ?? null,
+            'user_id' => $request->user_id,
+        ]);
         return response()->json([
             'message' => 'Image classified successfully'
         ]);
     }
-
 }

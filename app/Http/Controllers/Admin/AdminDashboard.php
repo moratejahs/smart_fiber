@@ -16,9 +16,15 @@ class AdminDashboard extends Controller
     public function index()
     {
         $data = DB::table('barangays')
+            ->select([
+            'barangays.name as barangay_name',
+            DB::raw("COUNT(CASE WHEN datasets.grade = 'S2 (Machine Strip)' THEN 1 END) as total_S2"),
+            DB::raw("COUNT(CASE WHEN datasets.grade = 'JK (Hand Strip)' THEN 1 END) as total_JK"),
+            DB::raw("COUNT(CASE WHEN datasets.grade = 'M1 (Bakbak ng JK)' THEN 1 END) as total_M1"),
+            DB::raw("COUNT(CASE WHEN datasets.grade = 'S3 (Bakbak ng S2)' THEN 1 END) as total_S3"),
+            ])
             ->leftJoin('users', 'users.barangay', '=', 'barangays.name')
             ->leftJoin('datasets', 'datasets.user_id', '=', 'users.id')
-            ->select('barangays.name as barangay_name', DB::raw('COUNT(datasets.id) as total_datasets'))
             ->groupBy('barangays.name')
             ->orderBy('barangays.name')
             ->get();
@@ -27,7 +33,12 @@ class AdminDashboard extends Controller
         $totalDataset = [];
         foreach ($data as $item) {
             $barangayNames[] = $item->barangay_name;
-            $totalDataset[] = $item->total_datasets;
+            $totalDataset[] = [
+            'total_S2' => $item->total_S2,
+            'total_JK' => $item->total_JK,
+            'total_M1' => $item->total_M1,
+            'total_S3' => $item->total_S3,
+            ];
         }
 
 
