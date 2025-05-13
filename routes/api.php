@@ -1,4 +1,5 @@
 <?php
+
 use \App\Http\Controllers\V1\API\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,3 @@ Route::post('/yolo9', [Yolo9Controller::class, 'index']);
 Route::post('/login', [LoginController::class, 'canLogin']);
 Route::get('/recents/{userId}', [RecentUserController::class, 'index']);
 Route::post('/dataset', [DatasetController::class, 'store']);
-
