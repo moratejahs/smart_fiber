@@ -18,18 +18,18 @@ class Yolo9Controller extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'image' => 'required|image',
+            'image_base64' => 'required|string',
             'user_id' => 'required',
         ]);
 
-        // Save the image to the public directory
-        $imagePath = $request->file('image')->store('uploads', 'public');
-        // $imageUrl = asset("storage/{$imagePath}");
-    $imageUrl = Storage::disk('public')->url($imagePath);
-        $apiKey = 'kbSD1BMksOvt0oqVengz';
+        $base64Image = $request->input('image_base64');
+        $apiKey = 'dyHNcVS6KTTg2o59MmTN';
+        $roboflowUrl = "https://detect.roboflow.com/abacafinalvlatest-f3vol/1?api_key={$apiKey}";
 
-        // Call the RoboFlow API
-        $response = Http::post("https://serverless.roboflow.com/abaca-fiber-classification-yoklg/1?api_key={$apiKey}&image={$imageUrl}");
+        // Send base64 image to Roboflow
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ])->post($roboflowUrl, $base64Image);
 
         $responseData = $response->json();
         $predictions = $responseData['predictions'] ?? [];
@@ -54,7 +54,7 @@ class Yolo9Controller extends Controller
             }
         }
         switch ($results['class'] ?? null) {
-            case 'grade-jk':
+            case 'Abaca Grade - S2':
                 $results = [
                     'grade' => 'JK (Hand Strip)',
                     'local_name' => 'Laguras',
@@ -62,7 +62,7 @@ class Yolo9Controller extends Controller
                 ];
                 break;
 
-            case 'grade-s-s2':
+            case 'Abaca Grade - M1':
                 $results = [
                     'grade' => 'S2 (Machine Strip)',
                     'local_name' => 'Spindle',
@@ -70,11 +70,48 @@ class Yolo9Controller extends Controller
                 ];
                 break;
 
-            case 'grade-s-i':
+            case 'Abaca Grade - S3':
                 $results = [
                     'grade' => 'S3 (Machine Strip)',
                     'local_name' => 'Bakbak',
                     'price' => '55 Pesos'
+                ];
+                break;
+
+            case 'Abaca Grade - EF':
+                    $results = [
+                        'grade' => 'S3 (Machine Strip)',
+                        'local_name' => 'Bakbak',
+                        'price' => '55 Pesos'
+                    ];
+                    break;
+
+            case 'Abaca Grade - G':
+                    $results = [
+                        'grade' => 'S3 (Machine Strip)',
+                        'local_name' => 'Bakbak',
+                        'price' => '55 Pesos'
+                    ];
+                    break;
+            case 'Abaca Grade - H':
+                        $results = [
+                            'grade' => 'S3 (Machine Strip)',
+                            'local_name' => 'Bakbak',
+                            'price' => '55 Pesos'
+                        ];
+                        break;
+            case 'Abaca Grade - I':
+                $results = [
+                    'grade' => 'S3 (Machine Strip)',
+                    'local_name' => 'Bakbak',
+                    'price' => '55 Pesos'
+                ];
+                break;
+            case 'Abaca Grade - JK':
+                $results = [
+                    'grade' => 'S3 (Machine Strip)',
+                  'local_name' => 'Bakbak',
+                   'price' => '55 Pesos'
                 ];
                 break;
 
@@ -94,7 +131,7 @@ class Yolo9Controller extends Controller
         // Only store in the Dataset model if a valid grade is found
         try {
             Dataset::create([
-                'image_path' => $imagePath,
+                'image_path' => $base64Image,
                 'grade' => $results['grade'],
                 'local_name' => $results['local_name'],
                 'price' => $results['price'],
