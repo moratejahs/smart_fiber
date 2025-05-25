@@ -19,31 +19,78 @@ class Yolo9Controller extends Controller
      public function detect(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|max:5120', // max 5MB, adjust as needed
+            'image' => 'required|image|max:102400',
+            'user_id' =>'required',
         ]);
 
-        // Get uploaded file
         $imageFile = $request->file('image');
-
-        // Convert to base64 (without prefix)
+        $imagePath = $imageFile->store('uploads', 'public'); // Save image to storage
         $base64Image = base64_encode(file_get_contents($imageFile->getPathname()));
-
-        // Roboflow endpoint with your model and API key
         $roboflowUrl = "https://detect.roboflow.com/abacafinalvlatest-f3vol/1?api_key=dyHNcVS6KTTg2o59MmTN";
 
-        // Send POST request to Roboflow API with base64 image as raw body
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
         ])->withBody($base64Image, 'application/x-www-form-urlencoded')
           ->post($roboflowUrl);
 
-        // Log the response for debugging
-        \Log::info('Roboflow response:', ['body' => $response->body(), 'status' => $response->status()]);
-
         if ($response->successful()) {
+            $data = $response->json();
+            $predictedClass = $data['predictions'][0]['class'] ?? null;
+            $results = [];
+            switch ($predictedClass) {
+                case 'Abaca Grade - S2':
+                    $results = [
+                        'grade' => 'JK (Hand Strip)',
+                        'local_name' => 'Laguras',
+                        'price' => '48 Pesos'
+                    ];
+                    break;
+                case 'Abaca Grade - M1':
+                    $results = [
+                        'grade' => 'S2 (Machine Strip)',
+                        'local_name' => 'Spindle',
+                        'price' => '86 Pesos'
+                    ];
+                    break;
+                case 'Abaca Grade - S3':
+                case 'Abaca Grade - EF':
+                case 'Abaca Grade - G':
+                case 'Abaca Grade - H':
+                case 'Abaca Grade - I':
+                case 'Abaca Grade - JK':
+                    $results = [
+                        'grade' => 'S3 (Machine Strip)',
+                        'local_name' => 'Bakbak',
+                        'price' => '55 Pesos'
+                    ];
+                    break;
+                default:
+                    $results = [
+                        'error' => 'Invalid image or unrecognized class'
+                    ];
+                    break;
+            }
+
+            if (!isset($results['error'])) {
+                try {
+                    Dataset::create([
+                        'image_path' => $imagePath, // Store only the file path
+                        'grade' => $results['grade'],
+                        'local_name' => $results['local_name'],
+                        'price' => $results['price'],
+                        'user_id' => $request->user_id,
+                    ]);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'error' => 'Failed to save data: ' . $e->getMessage()
+                    ], 500);
+                }
+            }
+
             return response()->json([
                 'success' => true,
-                'data' => $response->json()
+                'results' => $results,
+                'roboflow_raw' => $data
             ]);
         } else {
             \Log::error('Roboflow error:', ['body' => $response->body(), 'status' => $response->status()]);
@@ -54,6 +101,8 @@ class Yolo9Controller extends Controller
             ], $response->status());
         }
     }
+
+
     public function index(Request $request)
     {
         $request->validate([
@@ -76,47 +125,63 @@ class Yolo9Controller extends Controller
         $responseData = $response->json();
         $predictions = $responseData['predictions'] ?? [];
         $results = [];
-        $desiredClass = 'grade-s-s2';
+        $predictedClass = $response->json()['predictions'][0]['class'] ?? null;
 
-        if (!empty($predictions)) {
-            foreach ($predictions as $prediction) {
-                if ($prediction['class'] === $desiredClass) {
-                    $results = [
-                        'class' => $prediction['class'],
-                        'confidence' => $prediction['confidence'] ?? 0,
-                        'boundingBox' => [
-                            'x' => $prediction['x'] ?? 0,
-                            'y' => $prediction['y'] ?? 0,
-                            'width' => $prediction['width'] ?? 0,
-                            'height' => $prediction['height'] ?? 0,
-                        ],
-                    ];
-                    break;
-                }
-            }
+        switch ($predictedClass) {
+            case 'Abaca Grade - S2':
+                $results = [
+                    'grade' => 'JK (Hand Strip)',
+                    'local_name' => 'Laguras',
+                    'price' => '48 Pesos'
+                ];
+                break;
+            case 'Abaca Grade - M1':
+                $results = [
+                    'grade' => 'S2 (Machine Strip)',
+                    'local_name' => 'Spindle',
+                    'price' => '86 Pesos'
+                ];
+                break;
+            case 'Abaca Grade - S3':
+            case 'Abaca Grade - EF':
+            case 'Abaca Grade - G':
+            case 'Abaca Grade - H':
+            case 'Abaca Grade - I':
+            case 'Abaca Grade - JK':
+                $results = [
+                    'grade' => 'S3 (Machine Strip)',
+                    'local_name' => 'Bakbak',
+                    'price' => '55 Pesos'
+                ];
+                break;
+            default:
+                $results = [
+                    'error' => 'Invalid image or unrecognized class'
+                ];
+                break;
         }
 
-        if (empty($results['class'])) {
+        if (empty($results['grade'])) {
             return response()->json([
                 'error' => 'No prediction found'
             ], 400);
         }
 
-        // // Store in Dataset if needed (update as per your schema)
-        // try {
-        //     Dataset::create([
-        //         'image_path' => $publicUrl,
-        //         'grade' => $results['class'],
-        //         'user_id' => $request->user_id,
-        //     ]);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'error' => 'Failed to save data: ' . $e->getMessage()
-        //     ], 500);
-        // }
+        try {
+            Dataset::create([
+                'image_path' => $imagePath,
+                'grade' => $results['grade'],
+                'local_name' => $results['local_name'],
+                'price' => $results['price'],
+                'user_id' => $request->user_id,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to save data: ' . $e->getMessage()
+            ], 500);
+        }
 
         return response()->json([
-            'roboflow_response' => $responseData,
             'results' => $results
         ]);
     }
