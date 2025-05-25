@@ -77,7 +77,7 @@ class Yolo9Controller extends Controller
         // }
 
         return response()->json([
-            'message' => 'Image classified successfully',
+            'roboflow_response' => $responseData,
             'results' => $results
         ]);
     }
