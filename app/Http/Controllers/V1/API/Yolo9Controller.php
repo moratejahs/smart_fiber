@@ -18,18 +18,27 @@ class Yolo9Controller extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'image_base64' => 'required|string',
+            'image' => 'required|image',
             'user_id' => 'required',
         ]);
 
-        $base64Image = $request->input('image_base64');
+        // Store the uploaded image temporarily
+        $image = $request->file('image');
+        $imagePath = $image->store('uploads', 'public');
+        $imageFullPath = storage_path('app/public/' . $imagePath);
+
+        // Convert image to base64
+        $base64Image = base64_encode(file_get_contents($imageFullPath));
+
         $apiKey = 'dyHNcVS6KTTg2o59MmTN';
         $roboflowUrl = "https://detect.roboflow.com/abacafinalvlatest-f3vol/1?api_key={$apiKey}";
 
         // Send base64 image to Roboflow
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded'
-        ])->post($roboflowUrl, $base64Image);
+        ])->post($roboflowUrl, [
+            'body' => $base64Image
+        ]);
 
         $responseData = $response->json();
         $predictions = $responseData['predictions'] ?? [];
