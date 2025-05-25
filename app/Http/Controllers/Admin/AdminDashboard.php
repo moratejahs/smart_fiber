@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Barangay;
 use App\Models\Dataset;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -15,39 +16,40 @@ class AdminDashboard extends Controller
      */
     public function index()
     {
-        $data = DB::table('barangays')
+        // Define month names
+        $monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        // Get user count per month for the current year
+        $usersByMonth = DB::table('users')
             ->select([
-            'barangays.name as barangay_name',
-            DB::raw("COUNT(CASE WHEN datasets.grade = 'S2 (Machine Strip)' THEN 1 END) as total_S2"),
-            DB::raw("COUNT(CASE WHEN datasets.grade = 'JK (Hand Strip)' THEN 1 END) as total_JK"),
-            DB::raw("COUNT(CASE WHEN datasets.grade = 'M1 (Bakbak ng JK)' THEN 1 END) as total_M1"),
-            DB::raw("COUNT(CASE WHEN datasets.grade = 'S3 (Bakbak ng S2)' THEN 1 END) as total_S3"),
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as user_count')
             ])
-            ->leftJoin('users', 'users.barangay', '=', 'barangays.name')
-            ->leftJoin('datasets', 'datasets.user_id', '=', 'users.id')
-            ->groupBy('barangays.name')
-            ->orderBy('barangays.name')
-            ->get();
-        // Prepare the data for JavaScript
-        $barangayNames = [];
-        $totalDataset = [];
-        foreach ($data as $item) {
-            $barangayNames[] = $item->barangay_name;
-            $totalDataset[] = [
-            'total_S2' => $item->total_S2,
-            'total_JK' => $item->total_JK,
-            'total_M1' => $item->total_M1,
-            'total_S3' => $item->total_S3,
-            ];
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('user_count', 'month')
+            ->toArray();
+
+        // Initialize array with zeros for all months
+        $monthlyData = array_fill(1, 12, 0);
+
+        // Fill in the actual counts
+        foreach ($usersByMonth as $month => $count) {
+            $monthlyData[$month] = $count;
         }
 
+        // Convert to simple array (values only)
+        $monthlyData = array_values($monthlyData);
 
         return view('admin.dashboard.index', [
-            'barangayNames' => $barangayNames,
-            'totalDataset' => $totalDataset,
+            'monthNames' => $monthNames,
+            'monthlyData' => $monthlyData,
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.

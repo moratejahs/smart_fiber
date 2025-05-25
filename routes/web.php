@@ -27,6 +27,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
     Route::get('/yolo9', [Yolo9Controller::class, 'index']);
+    Route::post('/detect', [Yolo9Controller::class, 'detect']);
 
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
