@@ -37,14 +37,16 @@ class Yolo9Controller extends Controller
         ])->withBody($base64Image, 'application/x-www-form-urlencoded')
           ->post($roboflowUrl);
 
+        // Log the response for debugging
+        \Log::info('Roboflow response:', ['body' => $response->body(), 'status' => $response->status()]);
 
-        // Check if response is successful
         if ($response->successful()) {
             return response()->json([
                 'success' => true,
                 'data' => $response->json()
             ]);
         } else {
+            \Log::error('Roboflow error:', ['body' => $response->body(), 'status' => $response->status()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to get detection from Roboflow',
