@@ -15,6 +15,43 @@ class Yolo9Controller extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function detect(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:5120', // max 5MB, adjust as needed
+        ]);
+
+        // Get uploaded file
+        $imageFile = $request->file('image');
+
+        // Convert to base64 (without prefix)
+        $base64Image = base64_encode(file_get_contents($imageFile->getPathname()));
+
+        // Roboflow endpoint with your model and API key
+        $roboflowUrl = "https://detect.roboflow.com/abacafinalvlatest-f3vol/1?api_key=dyHNcVS6KTTg2o59MmTN";
+
+        // Send POST request to Roboflow API with base64 image as raw body
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ])->withBody($base64Image, 'application/x-www-form-urlencoded')
+          ->post($roboflowUrl);
+
+
+        // Check if response is successful
+        if ($response->successful()) {
+            return response()->json([
+                'success' => true,
+                'data' => $response->json()
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get detection from Roboflow',
+                'error' => $response->body()
+            ], $response->status());
+        }
+    }
     public function index(Request $request)
     {
         $request->validate([
