@@ -15,9 +15,13 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/barangays', [BarangayController::class, 'index']);
 Route::post('/register', [RegistrationController::class, 'store']);
+
 Route::post('/yolo9', [Yolo9Controller::class, 'index']);
+Route::post('/detect', [Yolo9Controller::class, 'detect']);
+
 Route::post('/login', [LoginController::class, 'canLogin']);
 Route::get('/recents/{userId}', [RecentUserController::class, 'index']);
+
 Route::post('/dataset', [DatasetController::class, 'store']);
 
 Route::post('/classify-image', [RoboFlowController::class, 'classify']);
