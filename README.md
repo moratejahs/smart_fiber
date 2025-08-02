@@ -8,7 +8,7 @@
 </p>
 
 
-##This project is for the image processing
+##This project is for the image processing test
 
 ## About Laravel
 
